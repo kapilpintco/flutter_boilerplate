@@ -15,7 +15,10 @@ void main() async {
 
   OneSignal.shared.init(
     "10a70431-5cef-49d4-99fe-18adf431036a",
-    iOSSettings: {OSiOSSettings.autoPrompt: false, OSiOSSettings.inAppLaunchUrl: false},
+    iOSSettings: {
+      OSiOSSettings.autoPrompt: false,
+      OSiOSSettings.inAppLaunchUrl: false,
+    },
   );
   OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.notification);
 
