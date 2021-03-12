@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 //app file
-import '../controllers/home_controller.dart';
+import 'package:flutter_boilerplate/controllers/home_controller.dart';
 
 class HomeLayout extends StatelessWidget {
   var homeCtrl = Get.put(HomeController());

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../packages/config_package.dart';
-import '../../../controllers/common/loading_controller.dart';
+import 'package:flutter_boilerplate/global/packages/config_package.dart';
+import 'package:flutter_boilerplate/controllers/common/loading_controller.dart';
 
 class LoadingComponent extends StatelessWidget {
   final Widget child;

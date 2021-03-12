@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utility/app_screen_util.dart';
+import 'package:flutter_boilerplate/global/utility/app_screen_util.dart';
 
 // used _ (underscore) for only used in this file
 AppScreenUtil _appScreenUtil = AppScreenUtil();

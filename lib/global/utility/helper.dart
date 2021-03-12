@@ -46,11 +46,14 @@ class Helper {
     await canLaunch(url) ? await launch(url) : Get.snackbar('error', 'Could not launch $url');
   }
 
-  successMessage(message) => Get.snackbar('success', message, backgroundColor: Colors.green, colorText: Colors.white);
-  errorMessage(message) => Get.snackbar('error', message, backgroundColor: Colors.red, colorText: Colors.white);
-  alertMessage(message) => Get.snackbar('alert', message, backgroundColor: Colors.yellow, colorText: Colors.black);
+  successMessage(message) => Get.snackbar('Success', message, backgroundColor: Colors.green, colorText: Colors.white);
+
+  errorMessage(message) => Get.snackbar('Error', message, backgroundColor: Colors.red, colorText: Colors.white);
+
+  alertMessage(message) => Get.snackbar('Alert', message, backgroundColor: Colors.yellow, colorText: Colors.black);
 
   void showLoading() => loadingCtrl.showLoading();
+
   void hideLoading() => loadingCtrl.hideLoading();
 
   String getImagePath(String url) {

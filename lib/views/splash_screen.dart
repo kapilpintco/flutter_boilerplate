@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_boilerplate/global/utility/index.dart';
-import '../global/packages/config_package.dart';
-import '../controllers/splash_controller.dart';
+import 'package:flutter_boilerplate/global/packages/config_package.dart';
+import 'package:flutter_boilerplate/controllers/splash_controller.dart';
 
 class SplashScreen extends StatelessWidget {
   //this will call Splash Controller

@@ -1,1 +1,1 @@
-export '../../views/home.dart';
+export 'package:flutter_boilerplate/views/home.dart';

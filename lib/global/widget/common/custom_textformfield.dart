@@ -1,4 +1,4 @@
-import '../../utility/index.dart';
+import 'package:flutter_boilerplate/global/utility/index.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatelessWidget {

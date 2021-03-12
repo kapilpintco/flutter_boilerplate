@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 
 //app file
 import 'route_name.dart';
-import '../packages/screen_package.dart';
+import 'package:flutter_boilerplate/global/packages/screen_package.dart';
 
 RouteName _routeName = RouteName();
 

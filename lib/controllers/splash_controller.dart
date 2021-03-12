@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../global/route/index.dart';
+import 'package:flutter_boilerplate/global/route/index.dart';
 
 class SplashController extends GetxController {
   @override
