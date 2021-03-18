@@ -13,9 +13,3 @@ class LoadingController extends GetxController {
     update();
   }
 }
-
-class Loader {
-  var loadingCtrl = Get.find<LoadingController>();
-  void showLoading() => loadingCtrl.showLoading();
-  void hideLoading() => loadingCtrl.hideLoading();
-}
