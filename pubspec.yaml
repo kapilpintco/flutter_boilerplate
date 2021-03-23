@@ -41,7 +41,6 @@ dependencies:
   material_design_icons_flutter: ^4.0.5855
   # Default Packages
   url_launcher: any
-  string_validator: ^0.3.0
 
 # for splash screen for android and ios
 flutter_native_splash:
