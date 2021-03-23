@@ -246,4 +246,64 @@ class Helper {
 
     //ex : helper.isNullOrBlank(data.val);
   }
+
+  bool isEmail(String str) {
+    RegExp _email = RegExp(
+        r"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$");
+    return _email.hasMatch(str.toLowerCase());
+    // ex : helper.isEmail('abc@gmail.com')
+  }
+
+  bool isNumeric(String str) {
+    RegExp _numeric = RegExp(r'^-?[0-9]+$');
+    return _numeric.hasMatch(str);
+    //ex : helper.isNumeric('1')
+  }
+
+  bool isInt(String str) {
+    RegExp _int = RegExp(r'^(?:-?(?:0|[1-9][0-9]*))$');
+    return _int.hasMatch(str);
+    //ex : helper.isInt('12242342423')
+  }
+
+  bool isJson(str) {
+    try {
+      json.decode(str);
+    } catch (e) {
+      return false;
+    }
+    return true;
+    //ex : helper.isJson('{"name":"Mary","age":30}')
+  }
+
+  String trim(String str, [String chars]) {
+    RegExp pattern = (chars != null) ? RegExp('^[$chars]+|[$chars]+\$') : RegExp(r'^\s+|\s+$');
+    return str.replaceAll(pattern, '');
+    //ex : helper.trim(' abv ') ==> abv Remove space from starting of the sentence
+  }
+
+  String ltrim(String str, [String chars]) {
+    var pattern = chars != null ? RegExp('^[$chars]+') : RegExp(r'^\s+');
+    return str.replaceAll(pattern, '');
+    //ex : helper.trim(' abv') ==> abv  Remove left side space from starting of the sentence
+  }
+
+  String rtrim(String str, [String chars]) {
+    var pattern = chars != null ? RegExp('[$chars]+\$') : RegExp(r'\s+$');
+    return str.replaceAll(pattern, '');
+    //ex : helper.trim('abv ') ==> abv  Remove right space from starting of the sentence
+  }
+
+  String whitelist(String str, String chars) {
+    return str.replaceAll(RegExp('[^' + chars + ']+'), '');
+  }
+
+  String blacklist(String str, String chars) {
+    return str.replaceAll(RegExp('[' + chars + ']+'), '');
+  }
+
+  dynamic filter(dynamic items, dynamic keyValue, string) {
+    return items.where((u) => (u['$keyValue'].toString() != null ? u['$keyValue'].toString().toLowerCase().contains(string.toLowerCase()) : false)).toList();
+    //ex : helper.filter(items, 'title', 'ab')
+  }
 }

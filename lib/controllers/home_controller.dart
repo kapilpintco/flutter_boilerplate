@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_boilerplate/global/packages/config_package.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
@@ -34,6 +35,15 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     // TODO: implement onInit
+
+    List<dynamic> items = [
+      {'title': 'abc'},
+      {'title': 'xyz'}
+    ];
+
+    dynamic data = helper.filter(items, 'title', 'ab');
+    print(data);
+
     super.onInit();
   }
 }
