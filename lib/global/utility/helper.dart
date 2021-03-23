@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_boilerplate/global/theme/index.dart';
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -282,28 +283,81 @@ class Helper {
     //ex : helper.trim(' abv ') ==> abv Remove space from starting of the sentence
   }
 
-  String ltrim(String str, [String chars]) {
+  String lTrim(String str, [String chars]) {
     var pattern = chars != null ? RegExp('^[$chars]+') : RegExp(r'^\s+');
     return str.replaceAll(pattern, '');
-    //ex : helper.trim(' abv') ==> abv  Remove left side space from starting of the sentence
+    //ex : helper.lTrim(' abv') ==> abv  Remove left side space from starting of the sentence
   }
 
-  String rtrim(String str, [String chars]) {
+  String rTrim(String str, [String chars]) {
     var pattern = chars != null ? RegExp('[$chars]+\$') : RegExp(r'\s+$');
     return str.replaceAll(pattern, '');
-    //ex : helper.trim('abv ') ==> abv  Remove right space from starting of the sentence
+    //ex : helper.rTrim('abv ') ==> abv  Remove right space from starting of the sentence
   }
 
-  String whitelist(String str, String chars) {
+  String whiteList(String str, String chars) {
     return str.replaceAll(RegExp('[^' + chars + ']+'), '');
+    //ex : helper.whitelist();
   }
 
-  String blacklist(String str, String chars) {
+  String blackList(String str, String chars) {
     return str.replaceAll(RegExp('[' + chars + ']+'), '');
+    //ex : helper.blackList();
   }
 
   dynamic filter(dynamic items, dynamic keyValue, string) {
     return items.where((u) => (u['$keyValue'].toString() != null ? u['$keyValue'].toString().toLowerCase().contains(string.toLowerCase()) : false)).toList();
     //ex : helper.filter(items, 'title', 'ab')
+  }
+
+  String asString(val) {
+    if (val != null)
+      return val.toString();
+    else
+      return '';
+
+    //ex : helper.asString(data.val);
+  }
+
+  List asList(val) {
+    if (val != null)
+      return val;
+    else
+      return [];
+
+    //ex : helper.asList(data.val);
+  }
+
+  bool asBool(val) {
+    if (val != null)
+      return val;
+    else
+      return false;
+
+    //ex : helper.asBool(data.val);
+  }
+
+  void deleteConfirmation({context, title, message, onConfirm}) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+        child: Text("Cancel", style: appCss.bodyStyle5),
+        onPressed: () {
+          Get.back();
+        });
+    Widget continueButton = TextButton(child: Text("Continue"), onPressed: onConfirm);
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(title ?? "Delete Confirmation", style: appCss.h3),
+      content: Text(message ?? "Are you sure you want to delete this?", style: appCss.bodyStyle4),
+      actions: [cancelButton, continueButton],
+    );
+    // show the dialog
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
+
+    // ex: helper.deleteConfirmation(context, (){ print('clicked'); });
   }
 }
