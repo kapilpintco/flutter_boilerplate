@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/screenutil_init.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 //app file
 import 'controllers/common/loading_controller.dart';
-import 'global/packages/config_package.dart';
 import 'global/language/index.dart';
+import 'global/packages/config_package.dart';
 import 'views/splash_screen.dart';
 
 void main() async {
@@ -31,7 +31,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: Size(360, 690),
-      allowFontScaling: false,
       builder: () => GetMaterialApp(
         builder: (context, widget) {
           return MediaQuery(

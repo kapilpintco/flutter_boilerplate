@@ -2,7 +2,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppScreenUtil {
   double fontSize(num size) {
-    return ScreenUtil().setSp(size, allowFontScalingSelf: false);
+    return ScreenUtil().setSp(size);
   }
 
   double screenWidth(num size) {

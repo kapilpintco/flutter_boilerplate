@@ -1,23 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_boilerplate/global/theme/index.dart';
 import 'dart:convert';
+import 'dart:math';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_boilerplate/controllers/common/loading_controller.dart';
+import 'package:flutter_boilerplate/global/assets/index.dart' show imageAssets;
+import 'package:flutter_boilerplate/global/networking/index.dart' show serverConfig;
+import 'package:flutter_boilerplate/global/theme/index.dart' show appColor, appCss;
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'dart:math';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
-//app files
-import 'package:flutter_boilerplate/controllers/common/loading_controller.dart';
-import 'package:flutter_boilerplate/global/theme/app_color.dart';
-import 'package:flutter_boilerplate/global/networking/server_config.dart';
-
-ServerConfig _serverConfig = ServerConfig();
-AppColor appColor = AppColor();
 
 final _storage = GetStorage();
 var loadingCtrl = Get.find<LoadingController>();
 
 class Helper {
+  //#region Storage
   dynamic getStorage(String name) {
     dynamic info = _storage.read(name) ?? '';
     return info != '' ? json.decode(info) : info;
@@ -43,31 +40,9 @@ class Helper {
 
     //ex : helper.clearStorage();
   }
+  //#endregion
 
-  getRandomColor() {
-    return Colors.primaries[Random().nextInt(Colors.primaries.length)];
-
-    //ex : helper.getRandomColor();
-  }
-
-  getDateString(DateTime date, String patten) {
-    return DateFormat(patten ?? 'dd-MM-yyyy').format(date);
-
-    //ex : helper.getDateString(DateTime.now(), 'dd-MMM-yyyy');
-  }
-
-  toDate(String date) {
-    if (date != null) return DateTime.parse(date);
-
-    //ex : helper.toDate('2012-01-26T13:51:50.417-07:00');
-  }
-
-  launchURL(String url) async {
-    await canLaunch(url) ? await launch(url) : Get.snackbar('error', 'Could not launch $url');
-
-    //ex : helper.launchURL('https://www.google.com');
-  }
-
+  //#region Snackbar
   successMessage(message) {
     return Get.snackbar('success', message, backgroundColor: Colors.green, colorText: Colors.white);
 
@@ -85,144 +60,9 @@ class Helper {
 
     //ex : helper.alertMessage('alert message');
   }
+  //#endregion
 
-  dialogMessage(String message, {VoidCallback onConfirm}) {
-    return Get.defaultDialog(
-      middleText: "$message",
-      onConfirm: onConfirm,
-      confirmTextColor: appColor.textPrimaryColor,
-    );
-
-    //ex : helper.dialogMessage('dialog message', (){});
-  }
-
-  void showLoading() {
-    return loadingCtrl.showLoading();
-
-    //ex : helper.showLoading();
-  }
-
-  void hideLoading() {
-    return loadingCtrl.hideLoading();
-
-    //ex : helper.hideLoading();
-  }
-
-  String getImagePath(String url) {
-    if (url != null) {
-      if (url.contains('http') || url.contains('https'))
-        return url;
-      else {
-        return _serverConfig.baseUrl + url;
-      }
-    } else
-      return '';
-
-    //ex : helper.getImagePath('https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg');
-    //ex : helper.getImagePath('photos/1591447/pexels-photo-1591447.jpeg');
-  }
-
-  double toDouble(dynamic val) {
-    if (val != null)
-      return double.parse(val.toString());
-    else
-      return 0;
-
-    //ex : helper.toDouble('12');
-  }
-
-  Color getColorFromHexCode(String color) {
-    try {
-      if (color != null) {
-        color = color.replaceAll('#', '');
-        String valueString = '0xFF' + color;
-        int value = int.parse(valueString);
-        return Color(value);
-      } else
-        return Color(0xFFDBEED3);
-    } on Exception catch (e) {
-      return Color(0xFFDBEED3);
-    }
-
-    //ex : helper.getColorFromHexCode('#TGDU78');
-  }
-
-  String currency(val) {
-    //var numFormat = NumberFormat.currency(locale: 'hi_IN', symbol: '₹'); //india
-    //var numFormat = NumberFormat.currency(locale: 'en_US', symbol: '$'); //us
-    var numFormat = NumberFormat.currency(locale: 'de_DE', symbol: '€'); //germany
-    return numFormat.format(val);
-
-    //ex : helper.currency(1200);
-  }
-
-  jsonGet(json, String path, defaultValue) {
-    try {
-      List pathSplitter = path.split(".");
-
-      /// <String,dynamic> || String
-      var returnValue;
-
-      json.forEach((key, value) {
-        var currentPatten = pathSplitter[0];
-        int index = 0;
-
-        if (currentPatten.contains('[') && currentPatten.contains(']')) {
-          int index1 = currentPatten.indexOf('[');
-          int index2 = currentPatten.indexOf(']');
-
-          index = int.parse(currentPatten.substring(index1 + 1, index2));
-          currentPatten = currentPatten.substring(0, index1);
-        }
-
-        if (key == currentPatten) {
-          if (pathSplitter.length == 1) {
-            returnValue = value;
-            return;
-          }
-
-          pathSplitter.remove(pathSplitter[0]);
-
-          if (value == null) {
-            returnValue = defaultValue;
-            return;
-          }
-          try {
-            try {
-              value = value.toJson();
-            } catch (error) {
-              // handle error
-            }
-
-            try {
-              if (value is List) {
-                value = value[index];
-              }
-            } catch (error) {
-              // handle error
-            }
-
-            returnValue = jsonGet(value, pathSplitter.join("."), defaultValue);
-          } catch (error) {
-            returnValue = defaultValue;
-          }
-          return;
-        }
-      });
-
-      return returnValue != null ? returnValue : defaultValue;
-    } on Exception catch (e) {
-      // TODO
-      return defaultValue;
-    }
-
-    //ex : helper.jsonGet(jobDetailCtrl.jobData, "salary_range", null);
-    //ex : helper.jsonGet(jobDetailCtrl.jobData, "salary_range.from", '');
-    //ex : helper.jsonGet(jobDetailCtrl.jobData, "salary_range.from.amount_gross", 0);
-    //ex : helper.jsonGet(jobDetailCtrl.jobData, "salary_range[0].from.amount_gross", 'null');
-    //ex : helper.jsonGet(jobDetailCtrl.jobData, "salary_range[0].from[1].amount_gross", null);
-  }
-
+  //#region Is
   bool isNull(val) {
     if (val == null)
       return true;
@@ -276,7 +116,9 @@ class Helper {
     return true;
     //ex : helper.isJson('{"name":"Mary","age":30}')
   }
+  //#endregion
 
+  //#region Trim & Replace
   String trim(String str, [String chars]) {
     RegExp pattern = (chars != null) ? RegExp('^[$chars]+|[$chars]+\$') : RegExp(r'^\s+|\s+$');
     return str.replaceAll(pattern, '');
@@ -304,12 +146,9 @@ class Helper {
     return str.replaceAll(RegExp('[' + chars + ']+'), '');
     //ex : helper.blackList();
   }
+  //#endregion
 
-  dynamic filter(dynamic items, dynamic keyValue, string) {
-    return items.where((u) => (u['$keyValue'].toString() != null ? u['$keyValue'].toString().toLowerCase().contains(string.toLowerCase()) : false)).toList();
-    //ex : helper.filter(items, 'title', 'ab')
-  }
-
+  //#region As
   String asString(val) {
     if (val != null)
       return val.toString();
@@ -329,12 +168,92 @@ class Helper {
   }
 
   bool asBool(val) {
-    if (val != null)
-      return val;
-    else
+    if (val != null && val != '') {
+      if (val is bool) {
+        return val;
+      } else {
+        return val == 'true' ? true : false;
+      }
+    } else
       return false;
-
     //ex : helper.asBool(data.val);
+  }
+
+  int asInt(val) {
+    if (val != null && val != '')
+      return int.parse(val.toString().split('.')[0]);
+    else
+      return 0;
+    //ex : helper.asInt(data.val);
+  }
+
+  double asDouble(val) {
+    try {
+      if (val != null && val != '')
+        return double.parse(val.toString());
+      else
+        return 0;
+    } on Exception catch (e) {
+      // TODO
+      return 0;
+    }
+    //ex : helper.asDouble(data.val);
+  }
+
+  DateTime asDate(String date) {
+    try {
+      if (date != null)
+        return DateTime.parse(date);
+      else
+        return null;
+    } on Exception catch (e) {
+      // TODO
+      return null;
+    }
+
+    //ex : helper.toDate('2012-01-26T13:51:50.417-07:00');
+  }
+  //#endregion
+
+  //#region Widget
+  Widget imageNetwork({
+    String url,
+    double height,
+    double width,
+    BoxFit fit,
+    Widget placeholder,
+    String errorImageAsset,
+  }) {
+    return CachedNetworkImage(
+      imageUrl: url,
+      width: width,
+      height: height,
+      fit: fit,
+      placeholder: (context, url) => placeholder ?? Center(child: CircularProgressIndicator()),
+      errorWidget: (context, url, error) => Image.asset(
+        errorImageAsset ?? imageAssets.noImageBanner,
+        width: width,
+        height: height,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+  //#endregion
+
+  //#region Dialog & Alert
+  dialogMessage(String message, {String title = "App Name", VoidCallback onConfirm, VoidCallback onCancel}) {
+    return Get.defaultDialog(
+      title: title,
+      middleText: "$message",
+      onConfirm: onConfirm,
+      titleStyle: appCss.h3,
+      middleTextStyle: appCss.bodyStyle4,
+      confirmTextColor: Colors.white,
+      buttonColor: appColor.primaryColor,
+      onCancel: onCancel,
+    );
+
+    //ex : helper.dialogMessage('dialog message', (){});
   }
 
   void deleteConfirmation({context, title, message, onConfirm}) {
@@ -359,5 +278,145 @@ class Helper {
         });
 
     // ex: helper.deleteConfirmation(context, (){ print('clicked'); });
+  }
+  //#endregion
+
+  //#region ForJson
+  getFromJson(json, String path, defaultValue) {
+    try {
+      List pathSplitter = path.split(".");
+
+      /// <String,dynamic> || String
+      var returnValue;
+
+      json.forEach((key, value) {
+        var currentPatten = pathSplitter[0];
+        int index = 0;
+
+        if (currentPatten.contains('[') && currentPatten.contains(']')) {
+          int index1 = currentPatten.indexOf('[');
+          int index2 = currentPatten.indexOf(']');
+
+          index = int.parse(currentPatten.substring(index1 + 1, index2));
+          currentPatten = currentPatten.substring(0, index1);
+        }
+
+        if (key == currentPatten) {
+          if (pathSplitter.length == 1) {
+            returnValue = value;
+            return;
+          }
+
+          pathSplitter.remove(pathSplitter[0]);
+
+          if (value == null) {
+            returnValue = defaultValue;
+            return;
+          }
+          try {
+            try {
+              value = value.toJson();
+            } catch (error) {
+              // handle error
+            }
+
+            try {
+              if (value is List) {
+                value = value[index];
+              }
+            } catch (error) {
+              // handle error
+            }
+
+            returnValue = getFromJson(value, pathSplitter.join("."), defaultValue);
+          } catch (error) {
+            returnValue = defaultValue;
+          }
+          return;
+        }
+      });
+
+      return returnValue != null ? returnValue : defaultValue;
+    } on Exception catch (e) {
+      // TODO
+      return defaultValue;
+    }
+
+    //ex : helper.getFromJson(jobDetailCtrl.jobData, "salary_range", null);
+    //ex : helper.getFromJson(jobDetailCtrl.jobData, "salary_range.from", '');
+    //ex : helper.getFromJson(jobDetailCtrl.jobData, "salary_range.from.amount_gross", 0);
+    //ex : helper.getFromJson(jobDetailCtrl.jobData, "salary_range[0].from.amount_gross", 'null');
+    //ex : helper.getFromJson(jobDetailCtrl.jobData, "salary_range[0].from[1].amount_gross", null);
+  }
+
+  dynamic filter(dynamic items, dynamic key, value) {
+    return items.where((u) => (u['$key'].toString() != null ? u['$key'].toString().toLowerCase().contains(value.toLowerCase()) : false)).toList();
+    //ex : helper.filter(items, 'title', 'ab')
+  }
+  //#endregion
+
+  //#region Loading
+  void showLoading() {
+    return loadingCtrl.showLoading();
+
+    //ex : helper.showLoading();
+  }
+
+  void hideLoading() {
+    return loadingCtrl.hideLoading();
+
+    //ex : helper.hideLoading();
+  }
+  //#endregion
+
+  getRandomColor() {
+    return Colors.primaries[Random().nextInt(Colors.primaries.length)];
+
+    //ex : helper.getRandomColor();
+  }
+
+  getDateString(DateTime date, String patten) {
+    return DateFormat(patten ?? 'dd-MM-yyyy').format(date);
+
+    //ex : helper.getDateString(DateTime.now(), 'dd-MMM-yyyy');
+  }
+
+  String getImagePath(dynamic url) {
+    if (url != null && url is String) {
+      if (url.contains('http') || url.contains('https'))
+        return url;
+      else {
+        return serverConfig.baseUrl + url;
+      }
+    } else
+      return '';
+
+    //ex : helper.getImagePath('https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg');
+    //ex : helper.getImagePath('photos/1591447/pexels-photo-1591447.jpeg');
+  }
+
+  Color getColorFromHexCode(String color) {
+    try {
+      if (color != null) {
+        color = color.replaceAll('#', '');
+        String valueString = '0xFF' + color;
+        int value = int.parse(valueString);
+        return Color(value);
+      } else
+        return Color(0xFFDBEED3);
+    } on Exception catch (e) {
+      return Color(0xFFDBEED3);
+    }
+
+    //ex : helper.getColorFromHexCode('#TGDU78');
+  }
+
+  String currency(val) {
+    //var numFormat = NumberFormat.currency(locale: 'hi_IN', symbol: '₹'); //india
+    //var numFormat = NumberFormat.currency(locale: 'en_US', symbol: '$'); //us
+    var numFormat = NumberFormat.currency(locale: 'de_DE', symbol: '€'); //germany
+    return numFormat.format(val);
+
+    //ex : helper.currency(1200);
   }
 }
