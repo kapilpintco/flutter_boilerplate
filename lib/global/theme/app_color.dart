@@ -14,4 +14,5 @@ class AppColor {
   final Color redColor = Colors.red;
   final Color lightGreyColor = const Color(0XFFCCCCCC);
   final Color dividerColor = Colors.grey;
+  final Color buttonTextColor = Colors.white;
 }
